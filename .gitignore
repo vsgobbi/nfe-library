@@ -9,3 +9,7 @@ venv/*
 #Cached files
 *.pyc
 *__pycache__
+
+#Static files
+*static/
+static/*

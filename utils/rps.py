@@ -8,9 +8,8 @@ class Rps:
 
     @classmethod
     def xmlCreateRps(cls, xml, inscricaoPrestador, serieRps, numeroRps, dataEmissao, statusRps, valorServicos,
-         valorDeducoes, codigoServico, issRetido, receiverTaxId, senderTaxId, tipoRps,
-         tributacaoRps, valorPis, valorCofins, valorInss, valorIr,
-         valorCsll, aliquotaServicos, receiverName, receiverStreetLine1,
+         valorDeducoes, codigoServico, issRetido, receiverTaxId, senderTaxId, tipoRps, tributacaoRps, valorPis,
+         valorCofins, valorInss, valorIr, valorCsll, aliquotaServicos, receiverName, receiverStreetLine1,
          receiverStreetNumber, receiverStreetLine2, receiverDistrict, receiverCity, receiverState,
          receiverZipCode, receiverEmail, description, privateKeyContent, certificateContent):
 
@@ -29,12 +28,6 @@ class Rps:
         )
 
         rpsSignature = Rsa.sign(text=rpsToSign, privateKeyContent=privateKeyContent)
-
-        xmlWithoutBreakLine = sub("\n*", "", xml)
-        xmlWithoutSpaces = sub("\s{2,}", "", xmlWithoutBreakLine)
-
-        p1WithSignature = search("<!\[CDATA\[(.*)\]\]>", xmlWithoutSpaces).group(1)
-        p1WithoutSignature = sub("<Signature .*</Signature>", "", p1WithSignature)
 
         parameters = {
             "rpsSignature": rpsSignature,
@@ -69,21 +62,80 @@ class Rps:
             "description": description.decode("utf-8")
         }
 
-        p1 = p1WithoutSignature.format(**parameters)
+        xml = cls.signXml(
+            xml=xml,
+            privateKeyContent=privateKeyContent,
+            certificateContent=certificateContent,
+            **parameters
+        )
+
+        return xml
+
+    @classmethod
+    def cancelRps(cls, xml, senderTaxId, inscricaoPrestador, nfeNumber, certificateContent, privateKeyContent):
+        cancelToSign = "{inscricaoPrestador}{nfeNumber}".format(
+            inscricaoPrestador=inscricaoPrestador.zfill(8),
+            nfeNumber=nfeNumber.zfill(12)
+        )
+
+        cancelSignature = Rsa.sign(text=cancelToSign, privateKeyContent=privateKeyContent)
+
+        parameters = {
+            "senderTaxId": senderTaxId,
+            "inscricaoPrestador": inscricaoPrestador,
+            "nfeNumber": nfeNumber,
+            "cancelSignature": cancelSignature,
+        }
+
+        xml = cls.signXml(
+                    xml=xml,
+                    privateKeyContent=privateKeyContent,
+                    certificateContent=certificateContent,
+                    **parameters
+        )
+
+        return xml
+
+    @classmethod
+    def consultNfes(cls, xml, senderTaxId, inscricaoPrestador, dtInicio, dtFim, certificateContent, privateKeyContent):
+        parameters = {
+            "senderTaxId": senderTaxId,
+            "inscricaoPrestador": inscricaoPrestador,
+            "dtInicio": dtInicio,
+            "dtFim": dtFim,
+        }
+
+        xml = cls.signXml(
+                    xml=xml,
+                    privateKeyContent=privateKeyContent,
+                    certificateContent=certificateContent,
+                    **parameters
+        )
+
+        return xml
+
+    @classmethod
+    def signXml(cls, xml, privateKeyContent, certificateContent, **kwargs):
+        xmlWithoutBreakLine = sub("\n*", "", xml)
+        xmlWithoutSpaces = sub("\s{2,}", "", xmlWithoutBreakLine)
+
+        p1WithSignature = search("<!\[CDATA\[(.*)\]\]>", xmlWithoutSpaces).group(1)
+        p1WithoutSignature = sub("<Signature .*</Signature>", "", p1WithSignature)
+
+        p1 = p1WithoutSignature.format(**kwargs)
 
         digestValue = Rsa.digest(p1)
-
-        namespace = search("<[^> ]+ ?([^>]*)>", p1).group(1)
+        namespace = search("<[^> ]+ ?([^>]*)>", p1WithoutSignature).group(1)
         signInfo = search("(<SignedInfo>.*</SignedInfo>)", xmlWithoutSpaces).group(1)
         signInfoWithNamespace = sub("<SignedInfo>", "<SignedInfo xmlns=\"http://www.w3.org/2000/09/xmldsig#\" {namespace}>".format(namespace=namespace), signInfo)
         message = signInfoWithNamespace.format(digestValue=digestValue)
         signatureValue = Rsa.sign(text=message, privateKeyContent=privateKeyContent)
 
-        xml = xmlWithoutSpaces.format(
-            digestValue=digestValue,
-            signatureValue=signatureValue,
-            certificate=Certificate.getContent(certificateContent),
-            **parameters
+        sigendXml = xmlWithoutSpaces.format(
+        digestValue=digestValue,
+        signatureValue=signatureValue,
+        certificate=Certificate.getContent(certificateContent),
+        **kwargs
         )
 
-        return xml
+        return sigendXml

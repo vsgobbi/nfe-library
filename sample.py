@@ -32,8 +32,8 @@ nota = {
     "description": "Teste de emissao de NFS-e de boletos prestados",
 }
 
-certificateFile = "./converted.crt"
-privateKeyRSA = "./RSAPrivateKey.pem"
+certificateFile = "./certificate.crt"
+privateKeyRSA = "./rsaKey.pem"
 
 privateKeyContent = open(privateKeyRSA).read()
 certificateContent = open(certificateFile).read()
