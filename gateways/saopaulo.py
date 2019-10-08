@@ -18,7 +18,7 @@ class SaopauloGateway:
             **kwargs
         )
 
-        return cls.postRequest(xml=xml)
+        return cls.postRequest(xml=xml, method="rps")
 
     @classmethod
     def cancelRps(cls, privateKeyContent, certificateContent, **kwargs):
@@ -28,7 +28,7 @@ class SaopauloGateway:
             certificateContent=certificateContent,
             **kwargs
         )
-        return cls.postRequest(xml=xml)
+        return cls.postRequest(xml=xml, method="rps")
 
     @classmethod
     def consultNfes(cls, privateKeyContent, certificateContent, **kwargs):
@@ -38,10 +38,10 @@ class SaopauloGateway:
             certificateContent=certificateContent,
             **kwargs
         )
-        return cls.postRequest(xml=xml)
+        return cls.postRequest(xml=xml, method="consult")
 
     @classmethod
-    def postRequest(cls, xml):
+    def postRequest(cls, xml, method):
         certFile = "../static/certificate.crt"
         keyFile = "../static/rsaKey.pem"
         caCertFile = "../static/cacert.pem"
@@ -78,10 +78,20 @@ class SaopauloGateway:
             verify=True)
 
         status = response.status_code
-        if status == 200:
-            response.encoding = "utf-8"
-            xmlResponse = str(response.content)
-            return Response.responseDissector(xmlResponse)
-        print status
-        print response.text
-        return "Error"
+        if status != 200:
+            return "Error"
+
+        if method == "consult":
+            return Response.getTail(cls.clearedResponse(response))
+
+        if method == "rps":
+            return Response.resultDict(cls.clearedResponse(response))
+
+
+    @classmethod
+    def clearedResponse(cls, response):
+        response.encoding = "utf-8"
+        xmlResponse = str(response.content)
+        xmlResponse = xmlResponse.replace("&lt;", "<")
+        xmlResponse = xmlResponse.replace("&gt;", ">")
+        return xmlResponse
