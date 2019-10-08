@@ -1,77 +1,14 @@
 from lxml import etree
+from re import search
 
 
 class Response:
 
     @classmethod
-    def responseDissector(cls, xmlResponse):
-        xmlResponse = xmlResponse.replace("&lt;", "<")
-        xmlResponse = xmlResponse.replace("&gt;", ">")
-        print(xmlResponse)
-        if "ConsultaNFeEmitidasResponse xmlns=" in xmlResponse and "<Sucesso>true</Sucesso>" in xmlResponse:
-            splitResult = xmlResponse.split("</Cabecalho>")
-            strResult = splitResult[1].split("</Retorno")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._getTail(strResult)
-        if "ConsultaNFeRecebidasResponse xmlns=" in xmlResponse and "<Sucesso>true</Sucesso>" in xmlResponse:
-            splitResult = xmlResponse.split("</Cabecalho>")
-            strResult = splitResult[1].split("</Retorno")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._getTail(strResult)
-        if "ConsultaCNPJResponse xmlns=" in xmlResponse and "<Sucesso>true</Sucesso>" in xmlResponse:
-            splitResult = xmlResponse.split("</Cabecalho>")
-            strResult = splitResult[1].split("</Retorno")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._resultDict(strResult)
-        if "EnvioRPSResponse xmlns=" in xmlResponse and "<Sucesso>true</Sucesso>" in xmlResponse:
-            splitResult = xmlResponse.split("""<Alerta xmlns="">""")
-            strResult = splitResult[1].split("</Alerta>")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._resultDict(strResult)
-        if "EnvioRPSResponse xmlns=" in xmlResponse and "<Sucesso>false</Sucesso>" in xmlResponse:
-            splitResult = xmlResponse.split("</Cabecalho>")
-            strResult = splitResult[1].split("</RetornoEnvioRPS>")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._resultDict(strResult)
-        if "CancelamentoNFeResponse xmlns=" in xmlResponse and "<Sucesso>true</Sucesso>" in xmlResponse:
-            splitResult = xmlResponse.split("</Cabecalho>")
-            strResult = splitResult[1].split("</RetornoCancelamentoNFe>")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._resultDict(strResult)
-        if "ConsultaNFeResponse xmlns=" in xmlResponse and "<Sucesso>true</Sucesso>" in xmlResponse:
-            splitResult = xmlResponse.split("<ChaveNFe>")
-            splitResult = splitResult[1].replace("</ChaveNFe>", "")
-            strResult = splitResult.split("</NFe>")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._resultDict(strResult)
-        if "Erro xmlns" in xmlResponse:
-            splitResult = xmlResponse.split("""<Erro xmlns="">""")
-            strResult = splitResult[1].split("</Erro>")
-            strResult = str(strResult[0])
-            strResult = "<root>" + strResult + "</root>"
-            return cls._resultDict(strResult)
-        else:
-            try:
-                xmlResponse = xmlResponse[38:]
-                splitResult = xmlResponse.split("<soap:Body>")
-                strResult = splitResult[1].split("</soap:Body>")
-                strResult = str(strResult[0])
-                strResult = "<root>" + strResult + "</root>"
-                return cls._resultDict(strResult)
-            except Exception as error:
-                raise error
-
-    @classmethod
-    def _resultDict(cls, strResult):
+    def resultDict(cls, strResult):
+        responseGroup = search("\<RetornoXML>(.*)\</Retorno", strResult).group(1)
         res = {}
-        root = etree.fromstring(strResult)
+        root = etree.fromstring(responseGroup)
         for i in root.iter():
             text = i.text
             text = text.encode("utf-8", "replace") if text else None
@@ -80,8 +17,11 @@ class Response:
         return res
 
     @classmethod
-    def _getTail(cls, strResult):
-        tree = etree.fromstring(strResult)
+    def getTail(cls, strResult):
+        responseGroup = search("\<RetornoXML>(.*)\</Retorno", strResult).group(1)
+        responseGroup = search("\</Cabecalho>(.*)\</Retorno", responseGroup).group(1)
+        root = "<root>" + responseGroup + "</root>"
+        tree = etree.fromstring(root)
         nfeData = []
         res = {}
         for i in tree:
