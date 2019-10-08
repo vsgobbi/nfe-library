@@ -1,6 +1,7 @@
 from requests.adapters import HTTPAdapter
 from requests.packages import PoolManager, HTTPConnectionPool
 
+
 try:
     from http.client import HTTPConnection
 except ImportError:
@@ -8,17 +9,21 @@ except ImportError:
 
 
 class NewAdapter(HTTPAdapter):
+
     def __init__(self, *args, **kwargs):
         self.soqt = kwargs.pop("soqt")
         super(NewAdapter, self).__init__(*args, **kwargs)
 
     def init_poolmanager(self, connections, maxsize, **kwargs):
-        self.poolmanager = NewPoolManager(num_pools=connections,
-                                          maxsize=maxsize,
-                                          soqt=self.soqt, **kwargs)
+        self.poolmanager = NewPoolManager(
+            num_pools=connections,
+            maxsize=maxsize,
+            soqt=self.soqt, **kwargs
+        )
 
 
 class NewPoolManager(PoolManager):
+
     def __init__(self, *args, **kwargs):
         self.soqt = kwargs.pop("soqt")
         super(NewPoolManager, self).__init__(*args, **kwargs)
@@ -28,19 +33,23 @@ class NewPoolManager(PoolManager):
 
 
 class NewHTTPConnectionPool(HTTPConnectionPool):
+
     def __init__(self, *args, **kwargs):
         self.soqt = kwargs.pop("soqt")
         super(NewHTTPConnectionPool, self).__init__(*args, **kwargs)
 
     def _new_conn(self):
         self.num_connections += 1
-        return NewHTTPConnection(host=self.host,
-                                 port=self.port,
-                                 strict=self.strict,
-                                 soqt=self.soqt)
+        return NewHTTPConnection(
+            host=self.host,
+            port=self.port,
+            strict=self.strict,
+            soqt=self.soqt
+        )
 
 
 class NewHTTPConnection(HTTPConnection):
+
     def __init__(self, *args, **kwargs):
         self.soqt = kwargs.pop("soqt")
         HTTPConnection.__init__(self, *args, **kwargs)
