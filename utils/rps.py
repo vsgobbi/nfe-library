@@ -88,10 +88,10 @@ class Rps:
         }
 
         xml = cls.signXml(
-                    xml=xml,
-                    privateKeyContent=privateKeyContent,
-                    certificateContent=certificateContent,
-                    **parameters
+            xml=xml,
+            privateKeyContent=privateKeyContent,
+            certificateContent=certificateContent,
+            **parameters
         )
 
         return xml
@@ -106,10 +106,10 @@ class Rps:
         }
 
         xml = cls.signXml(
-                    xml=xml,
-                    privateKeyContent=privateKeyContent,
-                    certificateContent=certificateContent,
-                    **parameters
+            xml=xml,
+            privateKeyContent=privateKeyContent,
+            certificateContent=certificateContent,
+            **parameters
         )
 
         return xml
@@ -132,10 +132,10 @@ class Rps:
         signatureValue = Rsa.sign(text=message, privateKeyContent=privateKeyContent)
 
         sigendXml = xmlWithoutSpaces.format(
-        digestValue=digestValue,
-        signatureValue=signatureValue,
-        certificate=Certificate.getContent(certificateContent),
-        **kwargs
+            digestValue=digestValue,
+            signatureValue=signatureValue,
+            certificate=Certificate.getContent(certificateContent),
+            **kwargs
         )
 
         return sigendXml
