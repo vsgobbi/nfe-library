@@ -13,3 +13,7 @@ venv/*
 #Static files
 *static/
 static/*
+
+#Sample files
+*samples/
+samples/*
