@@ -7,59 +7,59 @@ from .certificate import Certificate
 class Rps:
 
     @classmethod
-    def xmlCreateRps(cls, xml, inscricaoPrestador, serieRps, numeroRps, dataEmissao, statusRps, valorServicos,
-         valorDeducoes, codigoServico, issRetido, receiverTaxId, senderTaxId, tipoRps, tributacaoRps, valorPis,
-         valorCofins, valorInss, valorIr, valorCsll, aliquotaServicos, receiverName, receiverStreetLine1,
-         receiverStreetNumber, receiverStreetLine2, receiverDistrict, receiverCity, receiverState,
-         receiverZipCode, receiverEmail, description, privateKeyContent, certificateContent):
+    def xmlCreateRps(cls, xml, subscription, rpsSeries, rpsNumber, issueDate, statusRps, serviceAmount,
+                     deductionAmount, serviceCode, issRetain, receiverTaxId, senderTaxId, rpsType, rpsTax, pisAmount,
+                     cofinsAmount, inssAmount, irAmount, csllAmount, aliquot, receiverName, receiverStreetLine1,
+                     receiverStreetNumber, receiverStreetLine2, receiverDistrict, receiverCity, receiverState,
+                     receiverZipCode, receiverEmail, description, privateKeyContent, certificateContent):
 
-        rpsToSign = "{inscricaoPrestador}{serieRps}{numeroRps}{dataEmissao}T{statusRps}" \
-                    "{issRetido}{valorServicos}{valorDeducoes}{codigoServico}2{receiverTaxId}".format(
-            inscricaoPrestador=inscricaoPrestador.zfill(8),
-            serieRps=serieRps.ljust(5).upper(),
-            numeroRps=numeroRps.zfill(12),
-            dataEmissao=dataEmissao.replace("-", ""),
-            statusRps=statusRps,
-            issRetido={"false": "N", "true": "S"}.get(issRetido),
-            valorServicos=str(valorServicos).zfill(15),
-            valorDeducoes=str(valorDeducoes).zfill(15),
-            codigoServico=codigoServico.zfill(5),
-            receiverTaxId=receiverTaxId.zfill(14),
+        rpsToSign = "{InscricaoPrestador}{SerieRPS}{NumeroRPS}{DataEmissao}T{StatusRPS}" \
+                    "{ISSRetido}{ValorServicos}{ValorDeducoes}{CodigoServico}2{RazaoSocialTomador}".format(
+            InscricaoPrestador=subscription.zfill(8),
+            SerieRPS=rpsSeries.ljust(5).upper(),
+            NumeroRPS=rpsNumber.zfill(12),
+            DataEmissao=issueDate.replace("-", ""),
+            StatusRPS=statusRps,
+            ISSRetido={"false": "N", "true": "S"}.get(issRetain),
+            ValorServicos=str(serviceAmount).zfill(15),
+            ValorDeducoes=str(deductionAmount).zfill(15),
+            CodigoServico=serviceCode.zfill(5),
+            RazaoSocialTomador=receiverTaxId.zfill(14),
         )
 
         rpsSignature = Rsa.sign(text=rpsToSign, privateKeyContent=privateKeyContent)
 
         parameters = {
-            "rpsSignature": rpsSignature,
-            "inscricaoPrestador": inscricaoPrestador,
-            "serieRps": serieRps,
-            "tipoRps": tipoRps,
-            "tributacaoRps": tributacaoRps,
-            "valorPis": Currency.formatted(valorPis),
-            "valorCofins": Currency.formatted(valorCofins),
-            "valorInss": Currency.formatted(valorInss),
-            "valorIr": Currency.formatted(valorIr),
-            "valorCsll": Currency.formatted(valorCsll),
-            "valorServicos": Currency.formatted(valorServicos),
-            "valorDeducoes": Currency.formatted(valorDeducoes),
-            "aliquotaServicos": Currency.formatted(aliquotaServicos),
-            "numeroRps": numeroRps,
-            "dataEmissao": dataEmissao,
-            "statusRps": statusRps,
-            "codigoServico": codigoServico,
-            "issRetido": issRetido,
-            "senderTaxId": senderTaxId,
-            "receiverTaxId": receiverTaxId,
-            "receiverName": receiverName,
-            "receiverStreetLine1": receiverStreetLine1.decode("utf-8"),
-            "receiverStreetNumber": receiverStreetNumber,
-            "receiverStreetLine2": receiverStreetLine2.decode("utf-8"),
-            "receiverDistrict": receiverDistrict.decode("utf-8"),
-            "receiverCity": receiverCity,
-            "receiverState": receiverState,
-            "receiverZipCode": receiverZipCode,
-            "receiverEmail": receiverEmail,
-            "description": description.decode("utf-8")
+            "CPFCNPJRemetente": senderTaxId,
+            "Assinatura": rpsSignature,
+            "InscricaoPrestador": subscription,
+            "SerieRPS": rpsSeries,
+            "NumeroRPS": rpsNumber,
+            "TipoRPS": rpsType,
+            "DataEmissao": issueDate,
+            "StatusRPS": statusRps,
+            "TributacaoRPS": rpsTax,
+            "ValorServicos": Currency.formatted(serviceAmount),
+            "ValorDeducoes": Currency.formatted(deductionAmount),
+            "ValorPIS": Currency.formatted(pisAmount),
+            "ValorCOFINS": Currency.formatted(cofinsAmount),
+            "ValorINSS": Currency.formatted(inssAmount),
+            "ValorIR": Currency.formatted(irAmount),
+            "ValorCSLL": Currency.formatted(csllAmount),
+            "CodigoServico": serviceCode,
+            "AliquotaServicos": Currency.formatted(aliquot),
+            "ISSRetido": issRetain,
+            "CPFCNPJTomador": receiverTaxId,
+            "RazaoSocialTomador": receiverName,
+            "Logradouro": receiverStreetLine1.decode("utf-8"),
+            "NumeroEndereco": receiverStreetNumber,
+            "ComplementoEndereco": receiverStreetLine2.decode("utf-8"),
+            "Bairro": receiverDistrict.decode("utf-8"),
+            "Cidade": receiverCity,
+            "UF": receiverState,
+            "CEP": receiverZipCode,
+            "EmailTomador": receiverEmail,
+            "Discriminacao": description.decode("utf-8")
         }
 
         xml = cls.signXml(
@@ -72,19 +72,19 @@ class Rps:
         return xml
 
     @classmethod
-    def cancelRps(cls, xml, senderTaxId, inscricaoPrestador, nfeNumber, certificateContent, privateKeyContent):
-        cancelToSign = "{inscricaoPrestador}{nfeNumber}".format(
-            inscricaoPrestador=inscricaoPrestador.zfill(8),
-            nfeNumber=nfeNumber.zfill(12)
+    def cancelRps(cls, xml, senderTaxId, subscription, nfeNumber, certificateContent, privateKeyContent):
+        cancelToSign = "{InscricaoPrestador}{NumeroNFe}".format(
+            InscricaoPrestador=subscription.zfill(8),
+            NumeroNFe=nfeNumber.zfill(12)
         )
-
+        print(cancelToSign)
         cancelSignature = Rsa.sign(text=cancelToSign, privateKeyContent=privateKeyContent)
 
         parameters = {
-            "senderTaxId": senderTaxId,
-            "inscricaoPrestador": inscricaoPrestador,
-            "nfeNumber": nfeNumber,
-            "cancelSignature": cancelSignature,
+            "CPFCNPJRemetente": senderTaxId,
+            "InscricaoPrestador": subscription,
+            "NumeroNFe": nfeNumber,
+            "AssinaturaCancelamento": cancelSignature,
         }
 
         xml = cls.signXml(
@@ -97,10 +97,10 @@ class Rps:
         return xml
 
     @classmethod
-    def consultNfes(cls, xml, senderTaxId, inscricaoPrestador, dtInicio, dtFim, certificateContent, privateKeyContent):
+    def consultNfes(cls, xml, senderTaxId, subscription, dtInicio, dtFim, certificateContent, privateKeyContent):
         parameters = {
-            "senderTaxId": senderTaxId,
-            "inscricaoPrestador": inscricaoPrestador,
+            "CPFCNPJRemetente": senderTaxId,
+            "Inscricao": subscription,
             "dtInicio": dtInicio,
             "dtFim": dtFim,
         }
@@ -128,13 +128,13 @@ class Rps:
         namespace = search("<[^> ]+ ?([^>]*)>", p1WithoutSignature).group(1)
         signInfo = search("(<SignedInfo>.*</SignedInfo>)", xmlWithoutSpaces).group(1)
         signInfoWithNamespace = sub("<SignedInfo>", "<SignedInfo xmlns=\"http://www.w3.org/2000/09/xmldsig#\" {namespace}>".format(namespace=namespace), signInfo)
-        message = signInfoWithNamespace.format(digestValue=digestValue)
+        message = signInfoWithNamespace.format(DigestValue=digestValue)
         signatureValue = Rsa.sign(text=message, privateKeyContent=privateKeyContent)
 
         sigendXml = xmlWithoutSpaces.format(
-            digestValue=digestValue,
-            signatureValue=signatureValue,
-            certificate=Certificate.getContent(certificateContent),
+            DigestValue=digestValue,
+            SignatureValue=signatureValue,
+            X509Certificate=Certificate.getContent(certificateContent),
             **kwargs
         )
 
