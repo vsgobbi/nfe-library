@@ -1,6 +1,5 @@
 from requests.adapters import HTTPAdapter
-from requests.packages import PoolManager, HTTPConnectionPool
-
+from urllib3 import PoolManager, HTTPConnectionPool
 
 try:
     from http.client import HTTPConnection
