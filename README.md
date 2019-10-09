@@ -93,23 +93,23 @@ privateKeyContent = open("./static/rsaKey.pem").read()
 
 nfe = {
     "senderTaxId": "63841121000180",
-    "inscricaoPrestador":  "98412100",
-    "serieRps": "TESTE",
-    "numeroRps": "9117092019",
-    "tipoRps": "RPS",
-    "dataEmissao": "2019-07-09",
+    subscription:  "98412100",
+    rpsSeries: "TESTE",
+    rpsNumber: "9117092019",
+    rpsType: "RPS",
+    issueDate: "2019-07-09",
     "statusRps": "N",
-    "tributacaoRps": "T",
-    "issRetido": "false",
-    "valorServicos": "1",
-    "valorDeducoes": "0",
-    "valorPis": "0",
-    "valorIr": "0",
-    "valorCsll": "0",
-    "valorCofins": "0",
-    "valorInss": "0",
-    "codigoServico": "05895",
-    "aliquotaServicos": "2",
+    rpsTax: "T",
+    issRetain: "false",
+    serviceAmount: "1",
+    deductionAmount: "0",
+    pisAmount: "0",
+    irAmount: "0",
+    csllAmount: "0",
+    cofinsAmount: "0",
+    inssAmount: "0",
+    serviceCode: "05895",
+    aliquot: "2",
     "receiverTaxId": "30134945000167",
     "receiverName": "HUMMINGBIRD HEALTH PRODUCTS",
     "receiverStreetLine1": "Null",
@@ -133,7 +133,7 @@ print(SaopauloGateway.sendRps(
 
 nota = {
     "senderTaxId": "20018183000180",
-    "inscricaoPrestador": "57038597",
+    subscription: "57038597",
     "nfeNumber": "296"
 }
 
@@ -147,7 +147,7 @@ print(SaopauloGateway.cancelRps(
 
 parameters = {
     "senderTaxId": "20018183000180",
-    "inscricaoPrestador": "57038597",
+    subscription: "57038597",
     "dtInicio": "2019-09-15",
     "dtFim": "2019-09-18",
 }
