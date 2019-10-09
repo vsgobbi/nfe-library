@@ -3,61 +3,73 @@ from utils.rps import Rps
 from utils.response import Response
 from utils.schemas import schemaCreateRps, schemaCancelRps, schemaConsultNfes
 from ssl import wrap_socket, CERT_REQUIRED, PROTOCOL_TLSv1
-import requests
-import socket
+from requests import Session
+from socket import AF_INET, SOCK_STREAM, socket
 
 
 class SaopauloGateway:
 
     @classmethod
-    def sendRps(cls, privateKeyContent, certificateContent, **kwargs):
+    def sendRps(cls, privateKeyPath, certificatePath, **kwargs):
         xml = Rps.xmlCreateRps(
             xml=schemaCreateRps,
-            privateKeyContent=privateKeyContent,
-            certificateContent=certificateContent,
+            privateKeyContent=open(privateKeyPath, "rb").read(),
+            certificateContent=open(certificatePath, "rb").read(),
             **kwargs
         )
 
-        return cls.postRequest(xml=xml, method="rps")
+        return cls.postRequest(
+            xml=xml,
+            method="rps",
+            privateKeyPath=privateKeyPath,
+            certificatePath=certificatePath,
+        )
 
     @classmethod
-    def cancelRps(cls, privateKeyContent, certificateContent, **kwargs):
+    def cancelRps(cls, privateKeyPath, certificatePath, **kwargs):
         xml = Rps.cancelRps(
             xml=schemaCancelRps,
-            privateKeyContent=privateKeyContent,
-            certificateContent=certificateContent,
+            privateKeyContent=open(privateKeyPath).read(),
+            certificateContent=open(certificatePath).read(),
             **kwargs
         )
-        return cls.postRequest(xml=xml, method="rps")
+        return cls.postRequest(
+            xml=xml,
+            method="rps",
+            privateKeyPath=privateKeyPath,
+            certificatePath=certificatePath,
+           )
 
     @classmethod
-    def consultNfes(cls, privateKeyContent, certificateContent, **kwargs):
+    def consultNfes(cls, privateKeyPath, certificatePath, **kwargs):
         xml = Rps.consultNfes(
             xml=schemaConsultNfes,
-            privateKeyContent=privateKeyContent,
-            certificateContent=certificateContent,
+            privateKeyContent=open(privateKeyPath).read(),
+            certificateContent=open(certificatePath).read(),
             **kwargs
         )
-        return cls.postRequest(xml=xml, method="consult")
+        return cls.postRequest(
+            xml=xml,
+            method="consult",
+            privateKeyPath=privateKeyPath,
+            certificatePath=certificatePath,
+        )
 
     @classmethod
-    def postRequest(cls, xml, method):
-        certFile = "../static/certificate.crt"
-        keyFile = "../static/rsaKey.pem"
-        caCertFile = "../static/cacert.pem"
+    def postRequest(cls, xml, method, privateKeyPath, certificatePath):
 
-        clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        clientSocket = socket(AF_INET, SOCK_STREAM)
         clientSocket.settimeout(20)
         socks = wrap_socket(
             sock=clientSocket,
-            keyfile=keyFile,
-            certfile=certFile,
+            keyfile=privateKeyPath,
+            certfile=certificatePath,
             cert_reqs=CERT_REQUIRED,
             ssl_version=PROTOCOL_TLSv1,
-            ca_certs=caCertFile,
+            ca_certs="../static/cacert.pem",
         )
 
-        session = requests.Session()
+        session = Session()
 
         session.mount('http://', NewAdapter(soqt=socks))
         session.mount('https://', NewAdapter(soqt=socks))
@@ -75,7 +87,8 @@ class SaopauloGateway:
             "https://nfe.prefeitura.sp.gov.br/ws/lotenfe.asmx",
             xml,
             headers=headers,
-            verify=True)
+            verify=True
+        )
 
         status = response.status_code
         if status != 200:
@@ -86,7 +99,6 @@ class SaopauloGateway:
 
         if method == "rps":
             return Response.resultDict(cls.clearedResponse(response))
-
 
     @classmethod
     def clearedResponse(cls, response):
