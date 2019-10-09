@@ -9,45 +9,45 @@ schemaCreateRps = """
                     <p1:PedidoEnvioRPS xmlns:p1="http://www.prefeitura.sp.gov.br/nfe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                         <Cabecalho Versao="1">
                             <CPFCNPJRemetente>
-                                <CNPJ>{senderTaxId}</CNPJ>
+                                <CNPJ>{CPFCNPJRemetente}</CNPJ>
                             </CPFCNPJRemetente>
                         </Cabecalho>
                         <RPS>
-                            <Assinatura>{rpsSignature}</Assinatura>
+                            <Assinatura>{Assinatura}</Assinatura>
                             <ChaveRPS>
-                                <InscricaoPrestador>{inscricaoPrestador}</InscricaoPrestador>
-                                <SerieRPS>{serieRps}</SerieRPS>
-                                <NumeroRPS>{numeroRps}</NumeroRPS>
+                                <InscricaoPrestador>{InscricaoPrestador}</InscricaoPrestador>
+                                <SerieRPS>{SerieRPS}</SerieRPS>
+                                <NumeroRPS>{NumeroRPS}</NumeroRPS>
                             </ChaveRPS>
-                            <TipoRPS>{tipoRps}</TipoRPS>
-                            <DataEmissao>{dataEmissao}</DataEmissao>
-                            <StatusRPS>{statusRps}</StatusRPS>
-                            <TributacaoRPS>{tributacaoRps}</TributacaoRPS>
-                            <ValorServicos>{valorServicos}</ValorServicos>
-                            <ValorDeducoes>{valorDeducoes}</ValorDeducoes>
-                            <ValorPIS>{valorPis}</ValorPIS>
-                            <ValorCOFINS>{valorCofins}</ValorCOFINS>
-                            <ValorINSS>{valorInss}</ValorINSS>
-                            <ValorIR>{valorIr}</ValorIR>
-                            <ValorCSLL>{valorCsll}</ValorCSLL>
-                            <CodigoServico>{codigoServico}</CodigoServico>
-                            <AliquotaServicos>{aliquotaServicos}</AliquotaServicos>
-                            <ISSRetido>{issRetido}</ISSRetido>
+                            <TipoRPS>{TipoRPS}</TipoRPS>
+                            <DataEmissao>{DataEmissao}</DataEmissao>
+                            <StatusRPS>{StatusRPS}</StatusRPS>
+                            <TributacaoRPS>{TributacaoRPS}</TributacaoRPS>
+                            <ValorServicos>{ValorServicos}</ValorServicos>
+                            <ValorDeducoes>{ValorDeducoes}</ValorDeducoes>
+                            <ValorPIS>{ValorPIS}</ValorPIS>
+                            <ValorCOFINS>{ValorCOFINS}</ValorCOFINS>
+                            <ValorINSS>{ValorINSS}</ValorINSS>
+                            <ValorIR>{ValorIR}</ValorIR>
+                            <ValorCSLL>{ValorCSLL}</ValorCSLL>
+                            <CodigoServico>{CodigoServico}</CodigoServico>
+                            <AliquotaServicos>{AliquotaServicos}</AliquotaServicos>
+                            <ISSRetido>{ISSRetido}</ISSRetido>
                             <CPFCNPJTomador>
-                                <CNPJ>{receiverTaxId}</CNPJ>
+                                <CNPJ>{CPFCNPJTomador}</CNPJ>
                             </CPFCNPJTomador>
-                            <RazaoSocialTomador>{receiverName}</RazaoSocialTomador>
+                            <RazaoSocialTomador>{RazaoSocialTomador}</RazaoSocialTomador>
                             <EnderecoTomador>
-                                <Logradouro>{receiverStreetLine1}</Logradouro>
-                                <NumeroEndereco>{receiverStreetNumber}</NumeroEndereco>
-                                <ComplementoEndereco>{receiverStreetLine2}</ComplementoEndereco>
-                                <Bairro>{receiverDistrict}</Bairro>
-                                <Cidade>{receiverCity}</Cidade>
-                                <UF>{receiverState}</UF>
-                                <CEP>{receiverZipCode}</CEP>
+                                <Logradouro>{Logradouro}</Logradouro>
+                                <NumeroEndereco>{NumeroEndereco}</NumeroEndereco>
+                                <ComplementoEndereco>{ComplementoEndereco}</ComplementoEndereco>
+                                <Bairro>{Bairro}</Bairro>
+                                <Cidade>{Cidade}</Cidade>
+                                <UF>{UF}</UF>
+                                <CEP>{CEP}</CEP>
                             </EnderecoTomador>
-                            <EmailTomador>{receiverEmail}</EmailTomador>
-                            <Discriminacao>{description}</Discriminacao>
+                            <EmailTomador>{EmailTomador}</EmailTomador>
+                            <Discriminacao>{Discriminacao}</Discriminacao>
                         </RPS>
                         <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
                             <SignedInfo>
@@ -59,13 +59,13 @@ schemaCreateRps = """
                                         <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></Transform>
                                     </Transforms>
                                     <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
-                                    <DigestValue>{digestValue}</DigestValue>
+                                    <DigestValue>{DigestValue}</DigestValue>
                                 </Reference>
                             </SignedInfo>
-                            <SignatureValue>{signatureValue}</SignatureValue>
+                            <SignatureValue>{SignatureValue}</SignatureValue>
                             <KeyInfo>
                                 <X509Data>
-                                    <X509Certificate>{certificate}</X509Certificate>
+                                    <X509Certificate>{X509Certificate}</X509Certificate>
                                 </X509Data>
                             </KeyInfo>
                         </Signature>
@@ -89,16 +89,16 @@ schemaCancelRps = """
                     <p1:PedidoCancelamentoNFe xmlns:p1="http://www.prefeitura.sp.gov.br/nfe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                         <Cabecalho Versao="1">
                             <CPFCNPJRemetente>
-                                <CNPJ>{senderTaxId}</CNPJ>
+                                <CNPJ>{CPFCNPJRemetente}</CNPJ>
                             </CPFCNPJRemetente>
                             <transacao>true</transacao>
                         </Cabecalho>
                         <Detalhe>
                             <ChaveNFe>
-                                <InscricaoPrestador>{inscricaoPrestador}</InscricaoPrestador>
-                                <NumeroNFe>{nfeNumber}</NumeroNFe>
+                                <InscricaoPrestador>{InscricaoPrestador}</InscricaoPrestador>
+                                <NumeroNFe>{NumeroNFe}</NumeroNFe>
                             </ChaveNFe>
-                            <AssinaturaCancelamento>{cancelSignature}</AssinaturaCancelamento>
+                            <AssinaturaCancelamento>{AssinaturaCancelamento}</AssinaturaCancelamento>
                         </Detalhe>
                         <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
                             <SignedInfo>
@@ -110,13 +110,13 @@ schemaCancelRps = """
                                         <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></Transform>
                                     </Transforms>
                                     <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
-                                    <DigestValue>{digestValue}</DigestValue>
+                                    <DigestValue>{DigestValue}</DigestValue>
                                 </Reference>
                             </SignedInfo>
-                            <SignatureValue>{signatureValue}</SignatureValue>
+                            <SignatureValue>{SignatureValue}</SignatureValue>
                             <KeyInfo>
                                 <X509Data>
-                                    <X509Certificate>{certificate}</X509Certificate>
+                                    <X509Certificate>{X509Certificate}</X509Certificate>
                                 </X509Data>
                             </KeyInfo>
                         </Signature>
@@ -139,12 +139,12 @@ schemaConsultNfes = """
                     <p1:PedidoConsultaNFePeriodo xmlns:p1="http://www.prefeitura.sp.gov.br/nfe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                         <Cabecalho Versao="1">
                             <CPFCNPJRemetente>
-                                <CNPJ>{senderTaxId}</CNPJ>
+                                <CNPJ>{CPFCNPJRemetente}</CNPJ>
                             </CPFCNPJRemetente>
                             <CPFCNPJ>
-                                <CNPJ>{senderTaxId}</CNPJ>
+                                <CNPJ>{CPFCNPJRemetente}</CNPJ>
                             </CPFCNPJ>
-                            <Inscricao>{inscricaoPrestador}</Inscricao>
+                            <Inscricao>{Inscricao}</Inscricao>
                             <dtInicio>{dtInicio}</dtInicio>
                             <dtFim>{dtFim}</dtFim>
                             <NumeroPagina>1</NumeroPagina>
@@ -159,13 +159,13 @@ schemaConsultNfes = """
                                         <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></Transform>
                                     </Transforms>
                                     <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
-                                    <DigestValue>{digestValue}</DigestValue>
+                                    <DigestValue>{DigestValue}</DigestValue>
                                 </Reference>
                             </SignedInfo>
-                            <SignatureValue>{signatureValue}</SignatureValue>
+                            <SignatureValue>{SignatureValue}</SignatureValue>
                             <KeyInfo>
                                 <X509Data>
-                                    <X509Certificate>{certificate}</X509Certificate>
+                                    <X509Certificate>{X509Certificate}</X509Certificate>
                                 </X509Data>
                             </KeyInfo>
                         </Signature>
