@@ -91,27 +91,27 @@ privateKeyContent = open("./static/rsaKey.pem").read()
 
 ###Create Nfe:
 
-nfe = {
-    "senderTaxId": "63841121000180",
-    subscription:  "98412100",
-    rpsSeries: "TESTE",
-    rpsNumber: "9117092019",
-    rpsType: "RPS",
-    issueDate: "2019-07-09",
+nota = {
+    "senderTaxId": "01234567890123",
+    "subscription": "01234567",
+    "rpsSeries": "TESTE",
+    "rpsNumber": "9117092019",
+    "rpsType": "RPS",
+    "issueDate": "2019-07-09",
     "statusRps": "N",
-    rpsTax: "T",
-    issRetain: "false",
-    serviceAmount: "1",
-    deductionAmount: "0",
-    pisAmount: "0",
-    irAmount: "0",
-    csllAmount: "0",
-    cofinsAmount: "0",
-    inssAmount: "0",
-    serviceCode: "05895",
-    aliquot: "2",
-    "receiverTaxId": "30134945000167",
-    "receiverName": "HUMMINGBIRD HEALTH PRODUCTS",
+    "rpsTax": "T",
+    "issRetain": "false",
+    "serviceAmount": "1",
+    "deductionAmount": "0",
+    "pisAmount": "0",
+    "irAmount": "0",
+    "csllAmount": "0",
+    "cofinsAmount": "0",
+    "inssAmount": "0",
+    "serviceCode": "05895",
+    "aliquot": "2",
+    "receiverTaxId": "32109876543210",
+    "receiverName": "SOME COMPANY NAME",
     "receiverStreetLine1": "Null",
     "receiverStreetNumber": "123",
     "receiverStreetLine2": "Null",
@@ -126,15 +126,15 @@ nfe = {
 print(SaopauloGateway.sendRps(
     privateKeyContent=privateKeyContent,
     certificateContent=certificateContent,
-    **nfe
+    **nota
     ))
 
 ###How to delete a Nfe:
 
 nota = {
-    "senderTaxId": "20018183000180",
-    subscription: "57038597",
-    "nfeNumber": "296"
+    "senderTaxId": "01234567890123",
+    "subscription": "01234567",
+    "nfeNumber": "001"
 }
 
 print(SaopauloGateway.cancelRps(
@@ -146,8 +146,8 @@ print(SaopauloGateway.cancelRps(
 ###Consult sent Nfes
 
 parameters = {
-    "senderTaxId": "20018183000180",
-    subscription: "57038597",
+    "senderTaxId": "01234567890123",
+    "subscription": "01234567",
     "dtInicio": "2019-09-15",
     "dtFim": "2019-09-18",
 }
