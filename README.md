@@ -181,7 +181,7 @@ print(SaopauloGateway.consultNfes(
 
 Reach out to me at one of the following places!
 
-- E-mail at <a href="mailto:" target="_blank">`vitorsgobbi@hotmail.com`</a>
+- E-mail at <a href="mailto:vitorsgobbi@hotmail.com?Subject=nfe-library" target="_blank">`vitorsgobbi@hotmail.com`</a>
 - Github at <a href="https://www.github.com/vsgobbi" target="_blank">`@vsgobbi`</a>
 
 ---
