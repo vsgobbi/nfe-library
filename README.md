@@ -37,7 +37,7 @@ It serializes the data to request SOAP RPC services. Creates POST requests on We
 - Firstly, clone this repo to your local machine
 
 ```shell
-git clone https://github.com/starkbank/nfe.git
+git clone https://github.com/vsgobbi/nfe-library.git
 ```
 ---
 ### INSTALL PACKAGE
@@ -170,10 +170,10 @@ print(SaopauloGateway.consultNfes(
     - 🍴 Fork this repo!
 
 - **Step 2**
-    - 🔨🔨 Clone this repo to your local machine using `https://github.com/starkbank/nfe`
+    - 🔨🔨 Clone this repo to your local machine using `https://github.com/vsgobbi/nfe-library`
 
 - **Step 3**
-    - 🔃 Create a new pull request using <a href="https://github.com/starkbank/nfe/compare/" target="_blank">`https://github.com/starkbank/nfe/compare/`</a>
+    - 🔃 Create a new pull request using <a href="https://github.com/vsgobbi/nfe-library/compare" target="_blank">`https://github.com/vsgobbi/nfe-library/compare`</a>
 
 ---
 
@@ -181,7 +181,7 @@ print(SaopauloGateway.consultNfes(
 
 Reach out to me at one of the following places!
 
-- E-mail at <a href="mailto:" target="_blank">`vitor.gabriel@starkbank.com`</a>
+- E-mail at <a href="mailto:" target="_blank">`vitorsgobbi@hotmail.com`</a>
 - Github at <a href="https://www.github.com/vsgobbi" target="_blank">`@vsgobbi`</a>
 
 ---
