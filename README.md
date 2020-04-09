@@ -170,8 +170,10 @@ print(SaopauloGateway.consultNfes(
     - 🍴 Fork this repo!
 
 - **Step 2**
-    - 🔨🔨 Clone this repo to your local machine using `https://github.com/vsgobbi/nfe-library`
-
+    - 🔨🔨 Clone this repo to your local machine using 
+```
+    git clone `https://github.com/vsgobbi/nfe-library`
+```
 - **Step 3**
     - 🔃 Create a new pull request using <a href="https://github.com/vsgobbi/nfe-library/compare" target="_blank">`https://github.com/vsgobbi/nfe-library/compare`</a>
 
